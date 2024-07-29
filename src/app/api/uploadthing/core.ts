@@ -1,5 +1,7 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { z } from 'zod';
+import sharp from 'sharp'
+import { db } from "@/db";
 
 const f = createUploadthing();
 
@@ -10,7 +12,37 @@ export const ourFileRouter = {
             return { input };
         })
         .onUploadComplete(async ({ metadata, file }) => {
-            return { configId: metadata.input.configId };
+            const { configId } = metadata.input;
+            const res = await fetch(file.url); // ?
+            const buffer = await res.arrayBuffer();
+
+            // learning - sharp is great package to play with images resizing
+            const imgMetaData = await sharp(buffer).metadata();
+            const { width, height } = imgMetaData
+
+            if (!configId) {
+                // create one id
+                const configuration = await db.configuration.create({
+                    data: {
+                        imageUrl: file.url,
+                        height: height || 500,  // just to make ts happy
+                        width: width || 500 
+                    }
+                })
+                return {configId: configuration.id}
+            }else {
+                const updatedConfiguration = await db.configuration.update({
+                    where: {
+                        id: configId
+                    },
+                    data: {
+                        croppedImageUrl: file.url
+                    }
+                })
+                return {configId: updatedConfiguration.id}
+            }
+
+            return { configId };
         }),
 } satisfies FileRouter;
 
