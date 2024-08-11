@@ -16,6 +16,7 @@ const Page = async ({ searchParams }: PageProps) => {
     return notFound();
   }
 
+  // get image from db
   const configuration = await db.configuration.findUnique({
     where: { id }
   })

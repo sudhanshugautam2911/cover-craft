@@ -31,6 +31,7 @@ export const ourFileRouter = {
                 })
                 return {configId: configuration.id}
             }else {
+                // if we have already configId that means we are saving cropped image
                 const updatedConfiguration = await db.configuration.update({
                     where: {
                         id: configId
@@ -41,8 +42,6 @@ export const ourFileRouter = {
                 })
                 return {configId: updatedConfiguration.id}
             }
-
-            return { configId };
         }),
 } satisfies FileRouter;
 
