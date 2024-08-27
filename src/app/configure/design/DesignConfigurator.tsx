@@ -31,7 +31,8 @@ const DesignConfigurator = ({ configId, imageUrl, imageDimensions }: DesignConfi
     const { toast } = useToast()
   const router = useRouter()
 
-    // using transtack npm package 
+    // using transtack query - do caching, refetching and a lot of things for us, even if on another page we use the same key then it will get cached data
+    // mutation used anytime we want to change data on server like post or put request
     const { mutate: saveConfig, isPending } = useMutation({
         mutationKey: ['save-config'],
         mutationFn: async (args: SaveConfigArgs) => {
@@ -48,7 +49,6 @@ const DesignConfigurator = ({ configId, imageUrl, imageDimensions }: DesignConfi
             router.push(`/configure/preview?id=${configId}`)
         },
     })
-
 
     const [options, setOptions] = useState<{
         color: (typeof COLORS)[number]
