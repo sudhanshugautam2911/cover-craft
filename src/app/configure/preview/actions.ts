@@ -42,7 +42,7 @@ export const createCheckoutSession = async ({
     },
   })
 
-//   console.log(user.id, configuration.id)
+  console.log(user.id, configuration.id)
 
   if (existingOrder) {
     order = existingOrder
@@ -69,7 +69,7 @@ export const createCheckoutSession = async ({
     success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
     cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
     payment_method_types: ['card', 'paypal'],
-    mode: 'payment',        
+    mode: 'payment',
     shipping_address_collection: { allowed_countries: ['DE', 'US'] },
     metadata: {
       userId: user.id,
